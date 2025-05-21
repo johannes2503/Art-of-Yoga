@@ -33,7 +33,7 @@ db.sqlite3-journal
 media/
 
 # Environment variables
-.env.example
+backend/.env
 .env.local
 .env.*.local
 

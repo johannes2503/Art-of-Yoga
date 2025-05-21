@@ -1,24 +1,36 @@
 from rest_framework import permissions
 
+class IsAdminUser(permissions.BasePermission):
+    """Custom permission to only allow admin users."""
+    def has_permission(self, request, view):
+        return request.user and request.user.role == 'admin'
+
 class IsInstructorOrAdmin(permissions.BasePermission):
     """
     Custom permission to only allow instructors and admins to access the view.
     """
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role in ['instructor', 'admin']
+        return request.user and request.user.role in ['instructor', 'admin']
 
+class IsClientOrInstructor(permissions.BasePermission):
+    """Custom permission to allow clients and instructors."""
+    def has_permission(self, request, view):
+        return request.user and request.user.role in ['client', 'instructor']
+
+class IsOwnerOrInstructor(permissions.BasePermission):
+    """Custom permission to only allow owners of an object or their instructors to edit it."""
     def has_object_permission(self, request, view, obj):
-        # Check if the user is an instructor or admin
-        if not request.user.is_authenticated or request.user.role not in ['instructor', 'admin']:
-            return False
+        # Read permissions are allowed to any request
+        if request.method in permissions.SAFE_METHODS:
+            return True
         
-        # If the object has an instructor field, check if the user is the instructor
-        if hasattr(obj, 'instructor'):
-            return obj.instructor == request.user.userprofile
-        
-        # If the object has a user field, check if the user owns the object
-        if hasattr(obj, 'user'):
-            return obj.user == request.user
-        
-        # For other objects, allow access to instructors and admins
-        return True 
+        # Write permissions are only allowed to the owner or their instructor
+        return (
+            obj == request.user or  # Owner
+            (request.user.role == 'instructor' and obj.client_relationships.filter(instructor=request.user).exists())  # Instructor
+        )
+
+    def has_permission(self, request, view):
+        # This method is not implemented in the original code or the new class
+        # It's assumed to exist as it's called in the has_object_permission method
+        pass 

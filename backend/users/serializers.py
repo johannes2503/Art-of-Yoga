@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import UserProfile
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, RegexValidator
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """Serializer for user registration."""
@@ -37,18 +37,64 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for user profile management."""
-    email = serializers.EmailField(source='user.email', read_only=True)
+    email = serializers.EmailField(read_only=True)
+    role = serializers.CharField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
     
     class Meta:
         model = UserProfile
-        fields = ['id', 'email', 'role', 'full_name', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'email', 'created_at', 'updated_at', 'supabase_id']
+        fields = [
+            'id',
+            'email',
+            'role',
+            'full_name',
+            'phone',
+            'preferences',
+            'created_at',
+            'updated_at'
+        ]
+        read_only_fields = [
+            'id',
+            'email',
+            'role',
+            'created_at',
+            'updated_at',
+            'supabase_id'
+        ]
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
     """Serializer for updating user profile."""
+    phone = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\+?1?\d{9,15}$',
+                message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+            )
+        ]
+    )
+    preferences = serializers.JSONField(required=False)
+    
     class Meta:
         model = UserProfile
-        fields = ['full_name']
+        fields = ['full_name', 'phone', 'preferences']
         extra_kwargs = {
-            'full_name': {'required': False}
-        } 
+            'full_name': {'required': False},
+            'phone': {'required': False},
+            'preferences': {'required': False}
+        }
+    
+    def validate_preferences(self, value):
+        """Validate preferences JSON structure."""
+        if not isinstance(value, dict):
+            raise serializers.ValidationError("Preferences must be a JSON object")
+        
+        allowed_keys = {'notifications', 'email_updates', 'dark_mode', 'language'}
+        if not all(key in allowed_keys for key in value.keys()):
+            raise serializers.ValidationError(
+                f"Invalid preference keys. Allowed keys: {', '.join(allowed_keys)}"
+            )
+        
+        return value 

@@ -27,9 +27,14 @@
     - [x] Token refresh endpoint
     - [x] Logout endpoint with token blacklisting
     - [x] Profile management (get/update)
-  - [ ] User Portal: Get assigned routines, mark routines/exercises as completed.
-  - [ ] Instructor Portal: Create/edit/delete routines, assign routines to clients, manage client list.
+  - [x] User Portal: Get assigned routines, mark routines/exercises as completed.
+  - [x] Instructor Portal: Create/edit/delete routines, assign routines to clients, manage client list.
   - [x] Profile: Update user/instructor profile details.
+  - [ ] Media Management:
+    - [ ] File upload endpoints
+    - [ ] File download endpoints
+    - [ ] Media metadata management
+    - [ ] File validation and processing
 - [ ] Set up Supabase Storage integration for uploading images (PNG, JPG) and videos (MP4).
 - [ ] Implement file size validation (images ≤ 5MB, videos ≤ 50MB).
 - [ ] Configure role-based access control using Supabase Row-Level Security (RLS).
@@ -38,25 +43,25 @@
 
 ## 3. Frontend (Expo React Native, Tailwind CSS)
 
-- [ ] Initialize Expo React Native project.
-- [ ] Install and configure Tailwind CSS (nativewind or tailwind-rn) for styling.
-- [ ] Set up navigation (e.g., React Navigation) for user and instructor portals.
-- [ ] Implement authentication screens:
-  - [ ] Registration screen (email, password, name, role).
-  - [ ] Login screen.
-  - [ ] Password reset screen.
-- [ ] Develop user portal screens:
-  - [ ] Dashboard: List of assigned routines.
-  - [ ] Routine detail screen: Display routine name, description, exercises/poses, and media (images/videos).
-  - [ ] Progress tracking: Buttons to mark routines/exercises as completed.
-  - [ ] Profile screen: Update personal details.
-- [ ] Develop instructor portal screens:
+- [x] Initialize Expo React Native project.
+- [x] Install and configure Tailwind CSS (nativewind or tailwind-rn) for styling.
+- [x] Set up navigation (e.g., React Navigation) for user and instructor portals.
+- [x] Implement authentication screens:
+  - [x] Registration screen (email, password, name, role).
+  - [x] Login screen.
+  - [x] Password reset screen.
+- [x] Develop user portal screens:
+  - [x] Dashboard: List of assigned routines.
+  - [x] Routine detail screen: Display routine name, description, exercises/poses, and media (images/videos).
+  - [x] Progress tracking: Buttons to mark routines/exercises as completed.
+  - [x] Profile screen: Update personal details.
+- [x] Develop instructor portal screens:
 
-  - [ ] Dashboard: List of clients and their routines.
-  - [ ] Routine creation screen: Form for routine name, description, exercises/poses, and media uploads.
-  - [ ] Client management screen: Assign/unassign routines to clients.
-  - [ ] Routine management screen: Edit/delete routines.
-  - [ ] Profile screen: Update personal details.
+  - [x] Dashboard: List of clients and their routines.
+  - [x] Routine creation screen: Form for routine name, description, exercises/poses, and media uploads.
+  - [x] Client management screen: Assign/unassign routines to clients.
+  - [x] Routine management screen: Edit/delete routines.
+  - [x] Profile screen: Update personal details.
   - [ ] Breathing exercise creation screen:
     - [ ] Timer configuration interface
     - [ ] Breath pattern designer
@@ -73,12 +78,12 @@
     - [ ] Multi-type template manager
     - [ ] Client customization interface
 
-- [ ] Develop client portal screens:
+- [x] Develop client portal screens:
 
-  - [ ] Dashboard: List of assigned routines.
-  - [ ] Routine detail screen: Display routine name, description, exercises/poses, and media.
-  - [ ] Progress tracking: Buttons to mark routines/exercises as completed.
-  - [ ] Profile screen: Update personal details.
+  - [x] Dashboard: List of assigned routines.
+  - [x] Routine detail screen: Display routine name, description, exercises/poses, and media.
+  - [x] Progress tracking: Buttons to mark routines/exercises as completed.
+  - [x] Profile screen: Update personal details.
   - [ ] Breathing exercise player:
     - [ ] Timer interface with visual/audio cues
     - [ ] Breath pattern visualizer
@@ -109,12 +114,12 @@
     - [ ] Design visual/audio cues
     - [ ] Build session tracking
 - [ ] Configure Expo Push Notifications for new routine assignments.
-- [ ] Ensure mobile-responsive UI with Tailwind CSS for iOS and Android compatibility.
+- [x] Ensure mobile-responsive UI with Tailwind CSS for iOS and Android compatibility.
 - [ ] Write unit tests for React Native components and navigation.
 
 ## 4. Database and Storage (PostgreSQL, Supabase)
 
-- [ ] Set up PostgreSQL tables in Supabase:
+- [x] Set up PostgreSQL tables in Supabase:
 
   - [x] Users table (linked to Supabase Authentication).
   - [x] Routines table (name, description, instructor ID, assigned client IDs).
@@ -137,16 +142,18 @@
     - [x] Achievement integration
 
 - [ ] Configure Supabase Storage buckets:
-  - [ ] Images bucket
-  - [ ] Videos bucket
-  - [ ] Audio files bucket
-  - [ ] Breathing exercise media bucket
-  - [ ] Meditation session media bucket
-  - [ ] Combined routine media bucket
+  - [ ] Images bucket (priority: high)
+  - [ ] Videos bucket (priority: high)
+  - [ ] Audio files bucket (priority: high)
+  - [ ] Breathing exercise media bucket (priority: medium)
+  - [ ] Meditation session media bucket (priority: medium)
+  - [ ] Combined routine media bucket (priority: medium)
 - [ ] Set up Row-Level Security (RLS) policies:
-  - [ ] Restrict users to view only their assigned routines.
-  - [ ] Allow instructors to access their clients' data and routines.
-- [ ] Create database migrations for schema changes.
+  - [x] Basic user access policies
+  - [ ] Media access policies
+  - [ ] Routine access policies
+  - [ ] Client-instructor relationship policies
+- [x] Create database migrations for schema changes.
 - [x] Test database performance for routine retrieval and media access.
 
 ## 5. Security
@@ -164,8 +171,8 @@
   - [x] Password reset flow
   - [x] Token refresh flow
   - [x] Profile update flow
-- [ ] Test user portal functionality (view routines, mark progress, view media).
-- [ ] Test instructor portal functionality (create/edit/delete routines, assign clients).
+- [x] Test user portal functionality (view routines, mark progress, view media).
+- [x] Test instructor portal functionality (create/edit/delete routines, assign clients).
 - [ ] Perform cross-platform testing on iOS and Android via Expo.
 - [ ] Conduct performance testing for media streaming and API response times.
 - [ ] Test edge cases (e.g., large file uploads, invalid inputs).
@@ -180,10 +187,10 @@
 
 ## 8. Documentation and Training
 
-- [ ] Document API endpoints (e.g., using Swagger or Postman).
+- [x] Document API endpoints (e.g., using Swagger or Postman).
 - [ ] Create user guide for clients (how to use the app, view routines).
 - [ ] Create instructor guide (how to create/assign routines, manage clients).
-- [ ] Prepare developer documentation for code maintenance.
+- [x] Prepare developer documentation for code maintenance.
 
 ## 9. Future Enhancements (Post-MVP)
 
@@ -196,77 +203,100 @@
 - [ ] AI-powered exercise recommendations
 - [ ] Advanced audio processing features
 
-## 10. Clarification Tasks
+## 10. Current Sprint Focus (Next Steps)
 
-- [ ] Role-Specific Implementation:
+### High Priority
 
-  - [ ] Define and implement admin-specific features and permissions
-  - [ ] Create role-based access control matrix
-  - [ ] Implement role-specific UI elements and restrictions
+1. Media System Implementation:
 
-- [ ] Content Management Limits:
+   - [ ] Set up Supabase Storage buckets
+   - [ ] Implement file upload/download system
+   - [ ] Add file validation and compression
+   - [ ] Create media management API endpoints
+   - [ ] Build frontend media components
 
-  - [ ] Implement 100 routine limit per instructor
-  - [ ] Set up archive system for inactive routines
-  - [ ] Configure storage limits for templates
+2. Exercise Type Implementation:
 
-- [ ] Multimedia System:
+   - [ ] Complete breathing exercise system
+   - [ ] Implement meditation session functionality
+   - [ ] Build combined routine system
+   - [ ] Add exercise type transitions
 
-  - [ ] Update file size limits (100MB videos, 10MB images)
-  - [ ] Implement automatic compression for large files
-  - [ ] Set up multiple quality options for videos
+3. Timer and Audio Systems:
+   - [ ] Implement countdown timer
+   - [ ] Set up audio recording/streaming
+   - [ ] Create visual/audio cues
+   - [ ] Build session tracking
 
-- [ ] Template System:
+### Medium Priority
 
-  - [ ] Implement template sharing between instructors
-  - [ ] Create template customization workflow
-  - [ ] Set up template version control
+1. Security and Storage:
 
-- [ ] Analytics Implementation:
+   - [ ] Complete RLS policies
+   - [ ] Implement HTTPS
+   - [ ] Secure media access
+   - [ ] Add file access controls
 
-  - [ ] Set up client engagement tracking
-  - [ ] Implement routine effectiveness metrics
-  - [ ] Create instructor performance analytics
-  - [ ] Develop client progress analytics
-  - [ ] Build platform-wide analytics dashboard
+2. Notification System:
 
-- [ ] Offline System:
+   - [ ] Set up push notifications
+   - [ ] Implement email notifications
+   - [ ] Create in-app notifications
+   - [ ] Add notification preferences
 
-  - [ ] Implement download queue management
-  - [ ] Create sync mechanism for offline changes
-  - [ ] Set up storage management for offline content
-  - [ ] Implement offline mode indicators
+3. Analytics and Progress:
+   - [ ] Implement engagement tracking
+   - [ ] Set up effectiveness metrics
+   - [ ] Create progress tracking
+   - [ ] Build analytics dashboard
 
-- [ ] Data Management:
+### Lower Priority
 
-  - [ ] Implement 2-year user data retention
-  - [ ] Set up 1-year routine archiving
-  - [ ] Configure 3-year media retention
-  - [ ] Create automated cleanup processes
+1. Offline Support
+2. Social Features
+3. Advanced Analytics
+4. Wearable Integration
 
-- [ ] Exercise Type Implementation:
+## 11. Blockers and Dependencies
 
-  - [x] Define breathing exercise data structures
-  - [x] Create meditation session schemas
-  - [x] Design combined routine architecture
-  - [x] Implement exercise type transitions
+### Current Blockers
 
-- [ ] Timer System:
+1. Media System:
 
-  - [ ] Design countdown timer architecture
-  - [ ] Create stopwatch functionality
-  - [ ] Implement visual/audio cue system
-  - [ ] Build session tracking mechanism
+   - Blocks breathing exercises
+   - Blocks meditation sessions
+   - Blocks combined routines
+   - Required for progress tracking
 
-- [ ] Audio System:
+2. Timer System:
 
-  - [ ] Set up audio recording pipeline
-  - [ ] Implement audio streaming
-  - [ ] Create audio compression system
-  - [ ] Design offline audio access
+   - Required for breathing exercises
+   - Required for meditation sessions
+   - Blocks progress tracking
 
-- [ ] Progress Tracking:
-  - [x] Implement breathing exercise metrics
-  - [x] Create meditation session tracking
-  - [x] Design combined progress system
-  - [x] Build achievement framework
+3. Audio System:
+   - Required for meditation sessions
+   - Required for combined routines
+   - Blocks progress tracking
+
+### Dependencies
+
+1. Supabase Storage setup required for:
+
+   - Media upload/download
+   - Audio streaming
+   - Progress tracking
+   - Offline support
+
+2. RLS Policies required for:
+
+   - Media access
+   - Routine access
+   - Client-instructor relationships
+   - Progress tracking
+
+3. Notification System requires:
+   - Push notification setup
+   - Email service integration
+   - In-app notification storage
+   - User preferences storage

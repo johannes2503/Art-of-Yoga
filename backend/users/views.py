@@ -2,6 +2,7 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.conf import settings
+from django.db.models import Q
 from .models import UserProfile
 from .serializers import (
     UserRegistrationSerializer,
@@ -9,17 +10,8 @@ from .serializers import (
     UserProfileUpdateSerializer
 )
 from .authentication import SupabaseJWTAuthentication
+from .permissions import IsAdminUser, IsInstructorOrAdmin
 import requests
-
-class IsAdminUser(permissions.BasePermission):
-    """Custom permission to only allow admin users."""
-    def has_permission(self, request, view):
-        return request.user and request.user.role == 'admin'
-
-class IsInstructorOrAdmin(permissions.BasePermission):
-    """Custom permission to only allow instructors and admins."""
-    def has_permission(self, request, view):
-        return request.user and request.user.role in ['instructor', 'admin']
 
 class UserViewSet(viewsets.ModelViewSet):
     """ViewSet for user registration and profile management."""
@@ -32,6 +24,8 @@ class UserViewSet(viewsets.ModelViewSet):
             permission_classes = [permissions.AllowAny]
         elif self.action in ['update', 'partial_update', 'destroy']:
             permission_classes = [IsAdminUser]
+        elif self.action in ['instructors', 'clients']:
+            permission_classes = [permissions.IsAuthenticated]
         else:
             permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
@@ -40,9 +34,32 @@ class UserViewSet(viewsets.ModelViewSet):
         """Return appropriate serializer class."""
         if self.action == 'create':
             return UserRegistrationSerializer
-        elif self.action in ['update', 'partial_update']:
+        elif self.action in ['update', 'partial_update', 'me']:
             return UserProfileUpdateSerializer
         return UserProfileSerializer
+    
+    def get_queryset(self):
+        """Filter queryset based on user role and action."""
+        queryset = super().get_queryset()
+        
+        # For list action, filter based on role
+        if self.action == 'list':
+            if self.request.user.role == 'admin':
+                return queryset
+            elif self.request.user.role == 'instructor':
+                # Instructors can only see their clients
+                return queryset.filter(
+                    role='client',
+                    client_relationships__instructor=self.request.user
+                )
+            else:  # client
+                # Clients can only see their instructors
+                return queryset.filter(
+                    role='instructor',
+                    instructor_relationships__client=self.request.user
+                )
+        
+        return queryset
     
     def create(self, request, *args, **kwargs):
         """Handle user registration."""
@@ -91,6 +108,50 @@ class UserViewSet(viewsets.ModelViewSet):
     def me(self, request):
         """Get current user's profile."""
         serializer = UserProfileSerializer(request.user)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['put', 'patch'])
+    def update_profile(self, request):
+        """Update current user's profile."""
+        serializer = UserProfileUpdateSerializer(
+            request.user,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(UserProfileSerializer(request.user).data)
+    
+    @action(detail=False, methods=['get'])
+    def instructors(self, request):
+        """Get list of instructors (for clients)."""
+        if request.user.role != 'client':
+            return Response(
+                {'error': 'Only clients can access instructor list'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        instructors = UserProfile.objects.filter(
+            role='instructor',
+            instructor_relationships__client=request.user
+        )
+        serializer = UserProfileSerializer(instructors, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def clients(self, request):
+        """Get list of clients (for instructors)."""
+        if request.user.role != 'instructor':
+            return Response(
+                {'error': 'Only instructors can access client list'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        clients = UserProfile.objects.filter(
+            role='client',
+            client_relationships__instructor=request.user
+        )
+        serializer = UserProfileSerializer(clients, many=True)
         return Response(serializer.data)
     
     @action(detail=False, methods=['post'])
